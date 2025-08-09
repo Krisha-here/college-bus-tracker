@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>College Bus Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <header>
+        <h1>College Bus Tracker</h1>
+    </header>
+    <main>
+        <aside id="sidebar">
+            <h2>Live Bus Status</h2>
+            <div class="info">
+                <p><strong>Bus ID:</strong> B1</p>
+                <p><strong>Last Update:</strong> <span id="last-update">--</span></p>
+                <p><strong>ETA to Next Stop:</strong> -- mins</p>
+            </div>
+        </aside>
+        <section id="map"></section>
+    </main>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="map.js"></script>
+</body>
+</html>
