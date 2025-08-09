@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>College Bus Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Get bus number from URL (default to B1)
+        const urlParams = new URLSearchParams(window.location.search);
+        const busNumber = urlParams.get('bus') || 'B1';
+
+        // Default starting position (Kerala)
+        const START_LAT = 10.1900;
+        const START_LNG = 76.3879;
+
+        let map = L.map('map').setView([START_LAT, START_LNG], 15);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        let busIcon = L.icon({
+            iconUrl: 'bus.png',
+            iconSize: [40, 40],
+        });
+
+        let marker = L.marker([START_LAT, START_LNG], { icon: busIcon }).addTo(map);
+
+        function updateBusLocation() {
+            fetch(`http://127.0.0.1:5000/get_location/${busNumber}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.lat && data.lon) {
+                        marker.setLatLng([data.lat, data.lon]);
+                        map.panTo([data.lat, data.lon]);
+                    }
+                })
+                .catch(err => console.error(err));
+        }
+
+        setInterval(updateBusLocation, 3000);
+        updateBusLocation();
+    </script>
+</body>
+</html>

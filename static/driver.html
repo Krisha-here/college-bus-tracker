@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Driver Tracking</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Driver Tracking</h1>
+        <input type="text" id="busNumber" placeholder="Enter Bus Number">
+        <button id="startBtn">Start Tracking</button>
+        <button id="stopBtn" style="display: none;">Stop Tracking</button>
+        <p id="statusMessage" style="margin-top: 15px; font-weight: bold; color: blue;"></p>
+    </div>
+
+<button onclick="goBack()" style="
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+">←</button>
+
+    <script>
+        let tracking = false;
+        let intervalId = null;
+
+        function goBack() {
+    window.location.href = "index.html"; // Adjust path if needed
+}
+        document.getElementById("startBtn").addEventListener("click", function () {
+            const busNumber = document.getElementById("busNumber").value.trim();
+            if (!busNumber) {
+                alert("Please enter a bus number");
+                return;
+            }
+
+            tracking = true;
+            document.getElementById("stopBtn").style.display = "inline-block";
+            document.getElementById("statusMessage").textContent = "🚍 Tracking started";
+
+            intervalId = setInterval(() => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(position => {
+                        fetch(`/update_location?bus_number=${busNumber}&lat=${position.coords.latitude}&lon=${position.coords.longitude}`);
+                    });
+                }
+            }, 5000);
+        });
+
+        document.getElementById("stopBtn").addEventListener("click", function () {
+            tracking = false;
+            clearInterval(intervalId);
+            document.getElementById("stopBtn").style.display = "none";
+            document.getElementById("statusMessage").textContent = "🛑 Tracking stopped";
+        });
+    </script>
+</body>
+</html>
+
+
+
